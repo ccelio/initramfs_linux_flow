@@ -1,0 +1,12 @@
+My attempt at making an easy to build an initramFS Linux image for RISC-V testing.
+
+Symbolic link points to initramfs.txt (arch/riscv/initramfs.txt).
+
+Set "profile" to get what you need on bootup. Look at Makefile for how to change things.
+
+Fedora RPMs is a CPIO, so just extract it.
+
+dm-crypt, AES perf is heavy CPU in kernel.
+"time make in a kernel tree which has not actually been modified".
+something that modifies page-tables? lots of device I/O?
+riscv-pk, ../configure --build=riscv64-unknown-linux, but look at patches that change uname to return riscv64.

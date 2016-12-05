@@ -1,0 +1,3 @@
+echo ""
+uname -a
+echo ""

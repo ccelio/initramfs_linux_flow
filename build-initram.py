@@ -6,11 +6,12 @@
 import optparse
 import subprocess
 import os
+import getpass
 
 
-DIRNAME="/nscratch/$USER/initram"       # default source directory for copying over into linux initramfs.
-OUTNAME="initramfs.txt" 
-RISCV="/nscratch/$USER/install/riscv"   # RISCV install location. TODO: get this through bash environment.
+DIRNAME="/nscratch/" + getpass.getuser() + "/initram"       # default source directory for copying over into linux initramfs.
+OUTNAME="initramfs.txt"
+RISCV=os.environ["RISCV"]   # RISCV install location. TODO: get this through bash environment.
 
 # This is a HACK! I'm struggling to fit the initramfs onto a very small FPGA memory,
 # so include in the initramfs only the files we really need.
@@ -41,7 +42,6 @@ def main():
     elif options.bmark =="python":
         enables = (False,False,True)
     ENABLE_GCC,ENABLE_BASH,ENABLE_PYTHON = enables
-        
 
     initialize_init_file()
     append_init_file("celio", DIRNAME)
@@ -64,7 +64,7 @@ def initialize_init_file():
     with open(OUTNAME, 'w') as f:
         f.write("slink /init /bin/busybox 755 0 0\n")
         f.write("dir /bin 755 0 0\n")
-        f.write("file /bin/busybox ../busybox-1.21.1/busybox 755 0 0\n")
+        f.write("file /bin/busybox ../busybox/busybox 755 0 0\n")
         f.write("dir /dev 755 0 0\n")
         f.write("nod /dev/console 644 0 0 c 5 1\n")
         f.write("nod /dev/null 644 0 0 c 1 3\n")
@@ -75,13 +75,13 @@ def initialize_init_file():
         f.write("dir /usr/sbin 755 0 0\n")
         f.write("dir /etc 755 0 0\n")
         f.write("dir /lib 755 0 0\n")
-        f.write("file /lib/ld.so.1 /nscratch/celio/install/riscv/sysroot/lib/ld-2.23.so 755 0 0\n")
-#        f.write("file /lib/libc.so.6 /nscratch/celio/install/riscv/sysroot/lib/libc.so.6 755 0 0\n")
-#        f.write("file /lib/libstdc++.so.6 /nscratch/celio/install/riscv/riscv64-unknown-linux-gnu/lib/libstdc++.so.6 755 0 0\n")
-        f.write("file /lib/libm.so.6 /nscratch/celio/install/riscv/sysroot/lib/libm.so.6 755 0 0\n")
-        f.write("file /lib/libpthread.so.0 /nscratch/celio/install/riscv/sysroot/lib/libpthread.so.0 755 0 0\n")
-        f.write("file /lib/librt.so.1 /nscratch/celio/install/riscv/sysroot/lib/librt.so.1 755 0 0\n")
-        f.write("file /lib/libcrypt.so.1 /nscratch/celio/install/riscv/sysroot/lib/libcrypt.so.1 755 0 0\n")
+        f.write("file /lib/ld.so.1 " + RISCV + "/sysroot/lib/ld-2.23.so 755 0 0\n")
+#        f.write("file /lib/libc.so.6 " + RISCV + "/sysroot/lib/libc.so.6 755 0 0\n")
+#        f.write("file /lib/libstdc++.so.6 " + RISCV + "/riscv64-unknown-linux-gnu/lib/libstdc++.so.6 755 0 0\n")
+        f.write("file /lib/libm.so.6 " + RISCV + "/sysroot/lib/libm.so.6 755 0 0\n")
+        f.write("file /lib/libpthread.so.0 " + RISCV + "/sysroot/lib/libpthread.so.0 755 0 0\n")
+        f.write("file /lib/librt.so.1 " + RISCV + "/sysroot/lib/librt.so.1 755 0 0\n")
+        f.write("file /lib/libcrypt.so.1 " + RISCV + "/sysroot/lib/libcrypt.so.1 755 0 0\n")
         f.write("\n")
         f.write("dir /usr/lib 755 0 0\n")
         f.write("dir /usr/libexec 755 0 0\n")

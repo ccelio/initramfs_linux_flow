@@ -1,6 +1,6 @@
 slink /init /bin/busybox 755 0 0
 dir /bin 755 0 0
-file /bin/busybox ../busybox-1.21.1/busybox 755 0 0
+file /bin/busybox ../busybox/busybox 755 0 0
 dir /dev 755 0 0
 nod /dev/console 644 0 0 c 5 1
 nod /dev/null 644 0 0 c 1 3
@@ -11,13 +11,105 @@ dir /usr/bin 755 0 0
 dir /usr/sbin 755 0 0
 dir /etc 755 0 0
 dir /lib 755 0 0
+file /lib/ld.so.1 /nscratch/biancolin/current-riscv-toolchain/sysroot/lib/ld-2.23.so 755 0 0
+file /lib/libm.so.6 /nscratch/biancolin/current-riscv-toolchain/sysroot/lib/libm.so.6 755 0 0
+file /lib/libpthread.so.0 /nscratch/biancolin/current-riscv-toolchain/sysroot/lib/libpthread.so.0 755 0 0
+file /lib/librt.so.1 /nscratch/biancolin/current-riscv-toolchain/sysroot/lib/librt.so.1 755 0 0
+file /lib/libcrypt.so.1 /nscratch/biancolin/current-riscv-toolchain/sysroot/lib/libcrypt.so.1 755 0 0
 
 dir /usr/lib 755 0 0
 dir /usr/libexec 755 0 0
 dir /usr/libexec/gcc 755 0 0
+file /lib/libgcc_s.so.1 ../sysroot_lib/libgcc_s.so.1 755 0 0 
+slink /lib/libgcc_s.so libgcc_s.so.1 755 0 0 
+file /lib/libc-2.24.so ../sysroot_lib/libc-2.24.so 755 0 0 
+slink /lib/libc.so.6 libc-2.24.so 755 0 0 
 dir /tmp 755 0 0
+dir /usr/lib/riscv64-poky-linux 755 0 0
+dir /usr/bin/riscv64-poky-linux 755 0 0
+slink /usr/bin/riscv64-poky-linux/ar ../../../usr/bin/riscv64-poky-linux-ar           755 0 0
+slink /usr/bin/riscv64-poky-linux/as ../../../usr/bin/riscv64-poky-linux-as           755 0 0
+slink /usr/bin/riscv64-poky-linux/ld ../../../usr/bin/riscv64-poky-linux-ld           755 0 0
+slink /usr/bin/riscv64-poky-linux/ld.bfd ../../../usr/bin/riscv64-poky-linux-ld.bfd   755 0 0
+slink /usr/bin/riscv64-poky-linux/nm ../../../usr/bin/riscv64-poky-linux-nm           755 0 0
+slink /usr/bin/riscv64-poky-linux/objcopy ../../../usr/bin/riscv64-poky-linux-objcopy 755 0 0
+slink /usr/bin/riscv64-poky-linux/objdump ../../../usr/bin/riscv64-poky-linux-objdump 755 0 0
+slink /usr/bin/riscv64-poky-linux/ranlib ../../../usr/bin/riscv64-poky-linux-ranlib   755 0 0
+slink /usr/bin/riscv64-poky-linux/readelf ../../../usr/bin/riscv64-poky-linux-readelf 755 0 0
+slink /usr/bin/riscv64-poky-linux/strip ../../../usr/bin/riscv64-poky-linux-strip     755 0 0
+slink /usr/lib/libstdc++.so libstdc++.so.6.0.22 755 0 0
+slink /usr/lib/libstdc++.so.6 libstdc++.so.6.0.22 755 0 0
+file /usr/lib/libstdc++.so.6.0.22 ../sysroot_usr_lib/libstdc++.so.6.0.22 755 0 0
 
 file /etc/inittab inittab 755 0 0
 file /etc/profile ../profile 755 0 0
 
+dir /celio 755 0 0
+file /celio/rv_counters_hpm /nscratch/biancolin/initram/rv_counters_hpm 755 0 0
+dir /celio/riscv-spec-ref 755 0 0
+dir /celio/riscv-spec-ref/commands 755 0 0
+file /celio/riscv-spec-ref/commands/471.omnetpp.test.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/471.omnetpp.test.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/400.perlbench.ref.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/400.perlbench.ref.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/401.bzip2.test.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/401.bzip2.test.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/403.gcc.ref.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/403.gcc.ref.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/464.h264ref.ref.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/464.h264ref.ref.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/456.hmmer.ref.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/456.hmmer.ref.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/462.libquantum.ref.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/462.libquantum.ref.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/400.perlbench.test.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/400.perlbench.test.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/473.astar.test.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/473.astar.test.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/445.gobmk.ref.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/445.gobmk.ref.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/429.mcf.test.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/429.mcf.test.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/483.xalancbmk.ref.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/483.xalancbmk.ref.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/401.bzip2.ref.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/401.bzip2.ref.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/473.astar.ref.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/473.astar.ref.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/462.libquantum.test.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/462.libquantum.test.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/458.sjeng.ref.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/458.sjeng.ref.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/429.mcf.ref.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/429.mcf.ref.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/445.gobmk.test.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/445.gobmk.test.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/471.omnetpp.ref.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/471.omnetpp.ref.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/458.sjeng.test.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/458.sjeng.test.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/456.hmmer.test.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/456.hmmer.test.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/483.xalancbmk.test.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/483.xalancbmk.test.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/464.h264ref.test.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/464.h264ref.test.cmd 755 0 0
+file /celio/riscv-spec-ref/commands/403.gcc.test.cmd /nscratch/biancolin/initram/riscv-spec-ref/commands/403.gcc.test.cmd 755 0 0
+file /celio/hello.c /nscratch/biancolin/initram/hello.c 755 0 0
+file /celio/bash /nscratch/biancolin/initram/bash 755 0 0
+file /celio/run-coremark.sh /nscratch/biancolin/initram/run-coremark.sh 755 0 0
+dir /celio/benchmarks 755 0 0
+file /celio/benchmarks/towers.riscv /nscratch/biancolin/initram/benchmarks/towers.riscv 755 0 0
+file /celio/benchmarks/mm.riscv /nscratch/biancolin/initram/benchmarks/mm.riscv 755 0 0
+file /celio/benchmarks/dhrystone.riscv /nscratch/biancolin/initram/benchmarks/dhrystone.riscv 755 0 0
+file /celio/benchmarks/multiply.riscv /nscratch/biancolin/initram/benchmarks/multiply.riscv 755 0 0
+file /celio/benchmarks/vvadd.riscv /nscratch/biancolin/initram/benchmarks/vvadd.riscv 755 0 0
+file /celio/benchmarks/mt-matmul.riscv /nscratch/biancolin/initram/benchmarks/mt-matmul.riscv 755 0 0
+file /celio/benchmarks/qsort.riscv /nscratch/biancolin/initram/benchmarks/qsort.riscv 755 0 0
+file /celio/benchmarks/mt-vvadd.riscv /nscratch/biancolin/initram/benchmarks/mt-vvadd.riscv 755 0 0
+file /celio/benchmarks/rsort.riscv /nscratch/biancolin/initram/benchmarks/rsort.riscv 755 0 0
+file /celio/benchmarks/median.riscv /nscratch/biancolin/initram/benchmarks/median.riscv 755 0 0
+file /celio/benchmarks/spmv.riscv /nscratch/biancolin/initram/benchmarks/spmv.riscv 755 0 0
+file /celio/hello.riscv /nscratch/biancolin/initram/hello.riscv 755 0 0
 dir /usr/bin 755 0 0
+file /usr/bin/riscv64-poky-linux-ld.bfd /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-ld.bfd 755 0 0
+file /usr/bin/riscv64-poky-linux-ld /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-ld 755 0 0
+file /usr/bin/riscv64-poky-linux-ranlib /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-ranlib 755 0 0
+file /usr/bin/riscv64-poky-linux-objcopy /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-objcopy 755 0 0
+file /usr/bin/riscv64-poky-linux-gcc-ar /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-gcc-ar 755 0 0
+file /usr/bin/python2.7 /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/python2.7 755 0 0
+file /usr/bin/riscv64-poky-linux-ar /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-ar 755 0 0
+file /usr/bin/riscv64-poky-linux-gcc-nm /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-gcc-nm 755 0 0
+file /usr/bin/riscv64-poky-linux-gcc-ranlib /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-gcc-ranlib 755 0 0
+file /usr/bin/riscv64-poky-linux-as /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-as 755 0 0
+file /usr/bin/riscv64-poky-linux-addr2line /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-addr2line 755 0 0
+file /usr/bin/riscv64-poky-linux-objdump /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-objdump 755 0 0
+file /usr/bin/riscv64-poky-linux-size /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-size 755 0 0
+file /usr/bin/riscv64-poky-linux-elfedit /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-elfedit 755 0 0
+file /usr/bin/riscv64-poky-linux-strip /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-strip 755 0 0
+file /usr/bin/riscv64-poky-linux-nm /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-nm 755 0 0
+file /usr/bin/python2.7-config /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/python2.7-config 755 0 0
+file /usr/bin/riscv64-poky-linux-readelf /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-readelf 755 0 0
+file /usr/bin/pydoc /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/pydoc 755 0 0
+file /usr/bin/riscv64-poky-linux-c++filt /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-c++filt 755 0 0
+file /usr/bin/riscv64-poky-linux-gprof /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-gprof 755 0 0
+file /usr/bin/make /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/make 755 0 0
+file /usr/bin/riscv64-poky-linux-strings /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-strings 755 0 0
+file /usr/bin/riscv64-poky-linux-gcc /scratch/biancolin/initramfs_linux_flow/sysroot_usr_bin/riscv64-poky-linux-gcc 755 0 0

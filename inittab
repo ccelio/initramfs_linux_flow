@@ -1,0 +1,4 @@
+::sysinit:/bin/busybox --install
+::sysinit:/bin/mount -t devtmpfs devtmpfs /dev
+::sysinit:/bin/mount -t proc proc /proc
+/dev/console::sysinit:-/bin/ash

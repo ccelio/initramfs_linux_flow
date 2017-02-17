@@ -156,7 +156,7 @@ def initialize_init_file():
 
 
         f.write("\n")
-        f.write("file /etc/inittab inittab 755 0 0\n")
+        f.write("file /etc/inittab ../inittab 755 0 0\n")
         f.write("file /etc/profile ../profile 755 0 0\n")
         f.write("\n")
 

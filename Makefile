@@ -39,6 +39,9 @@ $(linux)/.config.old: $(linux)/.config
 ###############################################################################
 # Build
 ###############################################################################
+profile:
+	@echo "Give me a real profile script! Using a dummy instead."
+	ln -s dummy_profile profile
 
 initramfs.txt: build-initram.py $(linux)
 	./build-initram.py

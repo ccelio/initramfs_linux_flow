@@ -1,10 +1,9 @@
 
 # Some configuration.
-linux_version=4.6.2
-linux=linux-$(linux_version)
-riscv-linux-sha=8205b66a1104171284699985409ddd4d6921400d
+LINUX_VERSION=4.6.2
+RISCV-LINUX-SHA=8205b66a1104171284699985409ddd4d6921400d
 
-build_root := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+linux=linux-$(LINUX_VERSION)
 
 
 all: bblvmlinux
@@ -28,7 +27,7 @@ busybox/.config.old: busybox/.config
 # Fetch linux sources and apply RISCV patch
 $(linux):
 	curl -L https://cdn.kernel.org/pub/linux/kernel/v4.x/$(linux).tar.xz | tar -xJ
-	cd $(linux); git init;  git remote add -t master origin https://github.com/riscv/riscv-linux.git; git fetch; git checkout -f $(riscv-linux-sha)
+	cd $(linux); git init;  git remote add -t master origin https://github.com/riscv/riscv-linux.git; git fetch; git checkout -f $(RISCV-LINUX-SHA)
 
 $(linux)/.config: linux_config $(linux)
 	cp -f $< $@
@@ -37,21 +36,20 @@ $(linux)/.config: linux_config $(linux)
 $(linux)/.config.old: $(linux)/.config
 	make -C $(@D) ARCH=riscv oldconfig
 
-
-initramfs.txt: build-initram.py $(linux)
-	./build-initram.py
-
 ###############################################################################
 # Build
 ###############################################################################
 
-busybox/busybox: busybox/.config.old
-	time make -C $(@D) -j4
+initramfs.txt: build-initram.py $(linux)
+	./build-initram.py
 
-$(linux)/vmlinux: $(linux) $(linux)/.config.old $(dest_initram_files)
-	@echo $(dest_initram_files)
+busybox/busybox: busybox/.config.old profile
+	@echo "Building busybox."
+	time make -C $(@D) -j
+
+$(linux)/vmlinux: $(linux)/.config.old initramfs.txt busybox/busybox
 	@echo "Building riscv linux."
-	time make -C $(@D) -j4 ARCH=riscv vmlinux
+	time make -C $(@D) -j ARCH=riscv vmlinux
 
 bblvmlinux: $(linux)/vmlinux
 	@echo "Building an bbl instance with your payload."

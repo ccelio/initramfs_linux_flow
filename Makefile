@@ -1,12 +1,15 @@
 
 # Some configuration.
 LINUX_VERSION=4.6.2
-RISCV-LINUX-SHA=8205b66a1104171284699985409ddd4d6921400d
+RISCV-LINUX-BRANCH=master
+RISCV-LINUX-SHA=df91b31830ef24f748ef1b38c31ad4f913861b0b
 
 linux=linux-$(LINUX_VERSION)
 
 
 all: bblvmlinux
+
+initramfs: initramfs.txt
 
 # This setups the repository for automatic generation of ramdisk images
 # by running through the manual configuration stages of linux and busybox
@@ -27,7 +30,7 @@ busybox/.config.old: busybox/.config
 # Fetch linux sources and apply RISCV patch
 $(linux):
 	curl -L https://cdn.kernel.org/pub/linux/kernel/v4.x/$(linux).tar.xz | tar -xJ
-	cd $(linux); git init;  git remote add -t master origin https://github.com/riscv/riscv-linux.git; git fetch; git checkout -f $(RISCV-LINUX-SHA)
+	cd $(linux); git init;  git remote add -t $(RISCV-LINUX-BRANCH) origin https://github.com/riscv/riscv-linux.git; git fetch --all; git checkout -f $(RISCV-LINUX-SHA)
 
 $(linux)/.config: linux_config $(linux)
 	cp -f $< $@
@@ -43,7 +46,7 @@ profile:
 	@echo "Give me a real profile script! Using a dummy instead."
 	cp dummy_profile profile
 
-initramfs.txt: build-initram.py $(linux)
+initramfs.txt: build-initram.py
 	./build-initram.py
 
 busybox/busybox: busybox/.config.old profile

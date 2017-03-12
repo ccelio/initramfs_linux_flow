@@ -9,9 +9,10 @@ import os
 import getpass
 
 
-DIRNAME="/nscratch/" + getpass.getuser() + "/initram"       # default source directory for copying over into linux initramfs.
+DIRNAME="/nscratch/midas/initram"       # default source directory for copying over into linux initramfs.
 OUTNAME="initramfs.txt"
-RISCV=os.environ["RISCV"]   # RISCV install location. TODO: get this through bash environment.
+RISCV="/nscratch/midas/riscv-tools/current-tools" # RISCV install location. TODO: get this through bash environment.
+LIBPATH=os.path.join(RISCV, "sysroot", "lib64", "lp64d")
 
 # This is a HACK! I'm struggling to fit the initramfs onto a very small FPGA memory,
 # so include in the initramfs only the files we really need.
@@ -45,8 +46,10 @@ def main():
 
     initialize_init_file()
     append_init_file("celio", DIRNAME)
+    # append_init_file("/lib", LIBPATH) # TODO: too big
     # needed for compiling
-    append_init_file("usr/bin", os.path.abspath(os.curdir) + "/sysroot_usr_bin")
+    if ENABLE_GCC or ENABLE_PYTHON: 
+        append_init_file("usr/bin", os.path.abspath(os.curdir) + "/sysroot_usr_bin")
     if ENABLE_GCC:
         append_init_file("usr/include", os.path.abspath(os.curdir) + "/sysroot_usr_include")
         append_init_file("usr/lib/gcc", os.path.abspath(os.curdir) + "/sysroot_usr_lib/gcc")
@@ -75,13 +78,6 @@ def initialize_init_file():
         f.write("dir /usr/sbin 755 0 0\n")
         f.write("dir /etc 755 0 0\n")
         f.write("dir /lib 755 0 0\n")
-        f.write("file /lib/ld.so.1 " + RISCV + "/sysroot/lib/ld-2.23.so 755 0 0\n")
-#        f.write("file /lib/libc.so.6 " + RISCV + "/sysroot/lib/libc.so.6 755 0 0\n")
-#        f.write("file /lib/libstdc++.so.6 " + RISCV + "/riscv64-unknown-linux-gnu/lib/libstdc++.so.6 755 0 0\n")
-        f.write("file /lib/libm.so.6 " + RISCV + "/sysroot/lib/libm.so.6 755 0 0\n")
-        f.write("file /lib/libpthread.so.0 " + RISCV + "/sysroot/lib/libpthread.so.0 755 0 0\n")
-        f.write("file /lib/librt.so.1 " + RISCV + "/sysroot/lib/librt.so.1 755 0 0\n")
-        f.write("file /lib/libcrypt.so.1 " + RISCV + "/sysroot/lib/libcrypt.so.1 755 0 0\n")
         f.write("\n")
         f.write("dir /usr/lib 755 0 0\n")
         f.write("dir /usr/libexec 755 0 0\n")
@@ -128,31 +124,31 @@ def initialize_init_file():
             f.write("file /usr/lib/libpython2.7.so.1.0 ../sysroot_usr_lib/libpython2.7.so.1.0 755 0 0\n")
  
         
-        f.write("file /lib/libgcc_s.so.1 ../sysroot_lib/libgcc_s.so.1 755 0 0 \n")
-        f.write("slink /lib/libgcc_s.so libgcc_s.so.1 755 0 0 \n")
-        f.write("file /lib/libc-2.24.so ../sysroot_lib/libc-2.24.so 755 0 0 \n")
-        f.write("slink /lib/libc.so.6 libc-2.24.so 755 0 0 \n")
+        # f.write("file /lib/libgcc_s.so.1 ../sysroot_lib/libgcc_s.so.1 755 0 0 \n")
+        # f.write("slink /lib/libgcc_s.so libgcc_s.so.1 755 0 0 \n")
+        # f.write("file /lib/libc-2.24.so ../sysroot_lib/libc-2.24.so 755 0 0 \n")
+        # f.write("slink /lib/libc.so.6 libc-2.24.so 755 0 0 \n")
   
 
-        f.write("dir /tmp 755 0 0\n")
-        f.write("dir /usr/lib/riscv64-poky-linux 755 0 0\n")
-        f.write("dir /usr/bin/riscv64-poky-linux 755 0 0\n")
-        f.write("slink /usr/bin/riscv64-poky-linux/ar ../../../usr/bin/riscv64-poky-linux-ar           755 0 0\n")
-        f.write("slink /usr/bin/riscv64-poky-linux/as ../../../usr/bin/riscv64-poky-linux-as           755 0 0\n")
-        f.write("slink /usr/bin/riscv64-poky-linux/ld ../../../usr/bin/riscv64-poky-linux-ld           755 0 0\n")
-        f.write("slink /usr/bin/riscv64-poky-linux/ld.bfd ../../../usr/bin/riscv64-poky-linux-ld.bfd   755 0 0\n")
-        f.write("slink /usr/bin/riscv64-poky-linux/nm ../../../usr/bin/riscv64-poky-linux-nm           755 0 0\n")
-        f.write("slink /usr/bin/riscv64-poky-linux/objcopy ../../../usr/bin/riscv64-poky-linux-objcopy 755 0 0\n")
-        f.write("slink /usr/bin/riscv64-poky-linux/objdump ../../../usr/bin/riscv64-poky-linux-objdump 755 0 0\n")
-        f.write("slink /usr/bin/riscv64-poky-linux/ranlib ../../../usr/bin/riscv64-poky-linux-ranlib   755 0 0\n")
-        f.write("slink /usr/bin/riscv64-poky-linux/readelf ../../../usr/bin/riscv64-poky-linux-readelf 755 0 0\n")
-        f.write("slink /usr/bin/riscv64-poky-linux/strip ../../../usr/bin/riscv64-poky-linux-strip     755 0 0\n")
+        # f.write("dir /tmp 755 0 0\n")
+        # f.write("dir /usr/lib/riscv64-poky-linux 755 0 0\n")
+        # f .write("dir /usr/bin/riscv64-poky-linux 755 0 0\n")
+        # f.write("slink /usr/bin/riscv64-poky-linux/ar ../../../usr/bin/riscv64-poky-linux-ar           755 0 0\n")
+        # f.write("slink /usr/bin/riscv64-poky-linux/as ../../../usr/bin/riscv64-poky-linux-as           755 0 0\n")
+        # f.write("slink /usr/bin/riscv64-poky-linux/ld ../../../usr/bin/riscv64-poky-linux-ld           755 0 0\n")
+        # f.write("slink /usr/bin/riscv64-poky-linux/ld.bfd ../../../usr/bin/riscv64-poky-linux-ld.bfd   755 0 0\n")
+        # f.write("slink /usr/bin/riscv64-poky-linux/nm ../../../usr/bin/riscv64-poky-linux-nm           755 0 0\n")
+        # f.write("slink /usr/bin/riscv64-poky-linux/objcopy ../../../usr/bin/riscv64-poky-linux-objcopy 755 0 0\n")
+        # f.write("slink /usr/bin/riscv64-poky-linux/objdump ../../../usr/bin/riscv64-poky-linux-objdump 755 0 0\n")
+        # f.write("slink /usr/bin/riscv64-poky-linux/ranlib ../../../usr/bin/riscv64-poky-linux-ranlib   755 0 0\n")
+        # f.write("slink /usr/bin/riscv64-poky-linux/readelf ../../../usr/bin/riscv64-poky-linux-readelf 755 0 0\n")
+        # f.write("slink /usr/bin/riscv64-poky-linux/strip ../../../usr/bin/riscv64-poky-linux-strip     755 0 0\n")
 
 
         ##c++
-        f.write("slink /usr/lib/libstdc++.so libstdc++.so.6.0.22 755 0 0\n")
-        f.write("slink /usr/lib/libstdc++.so.6 libstdc++.so.6.0.22 755 0 0\n")
-        f.write("file /usr/lib/libstdc++.so.6.0.22 ../sysroot_usr_lib/libstdc++.so.6.0.22 755 0 0\n")
+        # f.write("slink /usr/lib/libstdc++.so libstdc++.so.6.0.22 755 0 0\n")
+        # f.write("slink /usr/lib/libstdc++.so.6 libstdc++.so.6.0.22 755 0 0\n")
+        # f.write("file /usr/lib/libstdc++.so.6.0.22 ../sysroot_usr_lib/libstdc++.so.6.0.22 755 0 0\n")
 
 
         f.write("\n")

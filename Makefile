@@ -30,7 +30,10 @@ busybox/.config.old: busybox/.config
 # Fetch linux sources and apply RISCV patch
 $(linux):
 	curl -L https://cdn.kernel.org/pub/linux/kernel/v4.x/$(linux).tar.xz | tar -xJ
-	cd $(linux); git init;  git remote add -t $(RISCV-LINUX-BRANCH) origin https://github.com/riscv/riscv-linux.git; git fetch --all; git checkout -f $(RISCV-LINUX-SHA)
+	cd $(linux); \
+	git init; \
+	git remote add -t $(RISCV-LINUX-BRANCH) origin https://github.com/riscv/riscv-linux.git; \
+	git fetch --all; git checkout -f $(RISCV-LINUX-SHA)
 
 $(linux)/.config: linux_config $(linux)
 	cp -f $< $@

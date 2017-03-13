@@ -9,7 +9,7 @@ import os
 import getpass
 
 
-DIRNAME="/nscratch/midas/initram"       # default source directory for copying over into linux initramfs.
+DIRNAME="/nscratch/midas/initram/hello"       # default source directory for copying over into linux initramfs.
 OUTNAME="initramfs.txt"
 RISCV="/nscratch/midas/riscv-tools/current-tools" # RISCV install location. TODO: get this through bash environment.
 LIBPATH=os.path.join(RISCV, "sysroot", "lib64", "lp64d")
@@ -46,6 +46,7 @@ def main():
 
     initialize_init_file()
     append_init_file("celio", DIRNAME)
+    append_init_file("celio/rv_counters", os.path.join("/nscratch", "midas", "initram", "rv_counters"))
     # append_init_file("/lib", LIBPATH) # TODO: too big
     # needed for compiling
     if ENABLE_GCC or ENABLE_PYTHON: 

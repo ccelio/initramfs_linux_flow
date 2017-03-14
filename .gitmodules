@@ -3,4 +3,4 @@
 	url = git@github.com:mirror/busybox.git
 [submodule "riscv-pk"]
 	path = riscv-pk
-	url = git@github.com:riscv/riscv-pk.git
+	url = git@github.com:donggyukim/riscv-pk.git

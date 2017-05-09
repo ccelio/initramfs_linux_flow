@@ -49,9 +49,10 @@ profile:
 	@echo "Give me a real profile script! Using a dummy instead."
 	cp dummy_profile profile
 
-DIRNAME ?= hello
+DIRNAME ?= none
 initramfs.txt: build-initram.py
-	./build-initram.py --dir=/nscratch/midas/initram/$(DIRNAME)
+	@echo "Building initramfs.txt; using directory:" $(DIRNAME)
+	./build-initram.py --dir=$(DIRNAME)
 
 busybox/busybox: busybox/.config.old profile
 	@echo "Building busybox."

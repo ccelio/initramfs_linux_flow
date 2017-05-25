@@ -19,6 +19,7 @@ LIBPATH=os.path.join(RISCV, "sysroot", "lib64", "lp64d")
 ENABLE_GCC=False
 ENABLE_BASH=False
 ENABLE_PYTHON=False
+ENABLE_JAVA=False
 
 #---------------------
 def main():
@@ -26,6 +27,7 @@ def main():
     global ENABLE_GCC
     global ENABLE_BASH
     global ENABLE_PYTHON
+    global ENABLE_JAVA
 
     parser = optparse.OptionParser()
     parser.add_option('-d', '--dir', dest='dirname', help='input directory (to put into Linux)', default=DIRNAME)
@@ -35,14 +37,16 @@ def main():
     print "Using %s." % DIRNAME
     print "For   %s." % options.bmark
 
-    enables = (False,False,False)
-    if options.bmark == "all":
-        enables = (True,True,True)
-    elif options.bmark =="riscv-pk":
-        enables = (True,True,False)
-    elif options.bmark =="python":
-        enables = (False,False,True)
-    ENABLE_GCC,ENABLE_BASH,ENABLE_PYTHON = enables
+    enables = (False,False,False,False)
+    if options.bmark ==  "all":
+        enables = (True,True,True,False)
+    elif options.bmark == "riscv-pk":
+        enables = (True,True,False,False)
+    elif options.bmark == "python":
+        enables = (False,False,True,False)
+    elif options.bmark == "java":
+        enables = (False,False,False,True)
+    ENABLE_GCC,ENABLE_BASH,ENABLE_PYTHON,ENABLE_JAVA = enables
 
     initialize_init_file()
     append_init_file("celio", DIRNAME)
@@ -61,7 +65,6 @@ def main():
     if ENABLE_PYTHON:
         append_init_file("usr/lib/python2.7", os.path.abspath(os.curdir) + "/sysroot_usr_lib/python2.7")
         append_init_file("lib", RISCV + "/riscv64-unknown-linux-gnu/lib")
-
 
 # Input: list of full path names to all of the files/directories we want to include.
 def initialize_init_file():
@@ -123,13 +126,54 @@ def initialize_init_file():
  
         if ENABLE_PYTHON:
             f.write("file /usr/lib/libpython2.7.so.1.0 ../sysroot_usr_lib/libpython2.7.so.1.0 755 0 0\n")
- 
-        
+
+        if ENABLE_JAVA:
+            dacapo_dir = os.path.join("/nscratch", "midas", "initram", "dacapo")
+            lib_dir = os.path.join(dacapo_dir, "rootfs", "lib")
+            lib_files = ["libtinfo.so.5",
+                         "libdl.so.2",
+                         "libc.so.6",
+                         "libm.so.6",
+                         "ld.so.1",
+                         "libpthread.so.0",
+                         "librt.so.1",
+                         "libgcc_s.so.1"]
+            f.write("\n")
+            f.write("file /bin/bash %s/bash 755 0 0\n" % (os.path.join(dacapo_dir, "rootfs", "bin")))
+            #f.write("file /bin/date %s/date 755 0 0\n" % (os.path.join(dacapo_dir, "rootfs", "bin")))
+            for file_name in lib_files:
+              f.write("file /lib/%s %s/%s 755 0 0\n" % (file_name, lib_dir, file_name))
+
+            jvm_dir = os.path.join(dacapo_dir, "dist", "BaseBaseMarkSweep_riscv64-linux")
+            jvm_files = ["constants.properties",
+                         # "JikesRVM",
+                         "jksvm.jar",
+                         "rvmrt.jar",
+                         "libjavaio.so",
+                         "libjavalangmanagement.so",
+                         "libjavalangreflect.so",
+                         "libjavalang.so",
+                         "libjavanet.so",
+                         "libjavanio.so",
+                         "libjavautil.so",
+                         "libjvm_jni.so",
+                         "libjvm.so",
+                         "rvm",
+                         "RVM.code.image",
+                         "RVM.data.image",
+                         "RVM.map",
+                         "RVM.rmap.image"]
+
+            f.write("\n")
+            f.write("dir /JikesRVM 755 0 0\n")
+            f.write("file /JikesRVM/JikesRVM %s/JikesRVM 777 0 0\n" % (jvm_dir))
+            for file_name in jvm_files:
+              f.write("file /JikesRVM/%s %s/%s 755 0 0\n" % (file_name, jvm_dir, file_name))
+
         # f.write("file /lib/libgcc_s.so.1 ../sysroot_lib/libgcc_s.so.1 755 0 0 \n")
         # f.write("slink /lib/libgcc_s.so libgcc_s.so.1 755 0 0 \n")
         # f.write("file /lib/libc-2.24.so ../sysroot_lib/libc-2.24.so 755 0 0 \n")
         # f.write("slink /lib/libc.so.6 libc-2.24.so 755 0 0 \n")
-  
 
         # f.write("dir /tmp 755 0 0\n")
         # f.write("dir /usr/lib/riscv64-poky-linux 755 0 0\n")

@@ -1,6 +1,3 @@
 [submodule "busybox"]
 	path = busybox
 	url = git@github.com:mirror/busybox.git
-[submodule "riscv-pk"]
-	path = riscv-pk
-	url = git@github.com:donggyukim/riscv-pk.git

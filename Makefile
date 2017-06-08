@@ -1,13 +1,13 @@
 
 # Some configuration.
-LINUX_VERSION=4.6.2
+LINUX_VERSION=4.1.17
 RISCV-LINUX-BRANCH=master
-RISCV-LINUX-SHA=df91b31830ef24f748ef1b38c31ad4f913861b0b
+RISCV-LINUX-SHA=174f395
 
 linux=linux-$(LINUX_VERSION)
 
 
-all: bblvmlinux
+all: vmlinux
 
 initramfs: initramfs.txt
 
@@ -35,12 +35,12 @@ $(linux):
 	git remote add -t $(RISCV-LINUX-BRANCH) origin https://github.com/riscv/riscv-linux.git; \
 	git fetch --all; git checkout -f $(RISCV-LINUX-SHA)
 
-$(linux)/.config: linux_config $(linux)
-	cp -f $< $@
+#$(linux)/.config: linux_config $(linux)
+#	cp -f $< $@
 
 # Configure linux. Hopefully this is a nop.
-$(linux)/.config.old: $(linux)/.config
-	make -C $(@D) ARCH=riscv oldconfig
+#$(linux)/.config.old: $(linux)/.config
+#	make -C $(@D) ARCH=riscv oldconfig
 
 ###############################################################################
 # Build
@@ -57,16 +57,16 @@ busybox/busybox: busybox/.config.old profile
 	@echo "Building busybox."
 	time make -C $(@D) -j
 
-$(linux)/vmlinux: $(linux)/.config.old initramfs.txt busybox/busybox
+$(linux)/vmlinux: $(linux) initramfs.txt busybox/busybox
 	@echo "Building riscv linux."
-	time make -C $(@D) -j ARCH=riscv vmlinux
+	make -C $(@D) ARCH=riscv defconfig
+	make -C $(@D) -j ARCH=riscv vmlinux
 
-bblvmlinux: $(linux)/vmlinux
-	@echo "Building an bbl instance with your payload."
-	time ./build-pk.sh
+vmlinux: $(linux)/vmlinux
+	cp $< $@
 
 clean:
-	rm -rf $(linux) initramfs.txt bblvmlinux
+	rm -rf $(linux) initramfs.txt vmlinux
 	cd busybox && git clean -x -d -f
 
 .PHONY: setup all clean

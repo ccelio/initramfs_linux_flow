@@ -4,3 +4,6 @@
 [submodule "riscv-pk"]
 	path = riscv-pk
 	url = git@github.com:donggyukim/riscv-pk.git
+[submodule "riscv-hpmcounters"]
+	path = riscv-hpmcounters
+	url = git@github.com:ccelio/riscv-hpmcounters.git

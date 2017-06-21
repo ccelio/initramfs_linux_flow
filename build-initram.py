@@ -12,12 +12,13 @@ import getpass
 DIRNAME="/nscratch/midas/initram/hello"       # default source directory for copying over into linux initramfs.
 OUTNAME="initramfs.txt"
 RISCV="/nscratch/midas/riscv-tools/current-tools" # RISCV install location. TODO: get this through bash environment.
+RV_COUNTERS=os.path.abspath(os.curdir) + "/riscv-hpmcounters" # Absolute location of RV counters source
 LIBPATH=os.path.join(RISCV, "sysroot", "lib64", "lp64d")
 
 # This is a HACK! I'm struggling to fit the initramfs onto a very small FPGA memory,
 # so include in the initramfs only the files we really need.
 ENABLE_GCC=False
-ENABLE_BASH=False
+ENABLE_BASH=True
 ENABLE_PYTHON=False
 ENABLE_JAVA=False
 
@@ -49,22 +50,22 @@ def main():
     ENABLE_GCC,ENABLE_BASH,ENABLE_PYTHON,ENABLE_JAVA = enables
 
     initialize_init_file()
-    append_init_file("celio", DIRNAME)
-    append_init_file("celio/rv_counters", os.path.join("/nscratch", "midas", "initram", "rv_counters"))
-    # append_init_file("/lib", LIBPATH) # TODO: too big
+    append_dir("celio", DIRNAME)
+    append_file("celio/rv_counters", RV_COUNTERS + "/hpm_counters")
+    # append_dir("/lib", LIBPATH) # TODO: too big
     # needed for compiling
     if ENABLE_GCC or ENABLE_PYTHON: 
-        append_init_file("usr/bin", os.path.abspath(os.curdir) + "/sysroot_usr_bin")
+        append_dir("usr/bin", os.path.abspath(os.curdir) + "/sysroot_usr_bin")
     if ENABLE_GCC:
-        append_init_file("usr/include", os.path.abspath(os.curdir) + "/sysroot_usr_include")
-        append_init_file("usr/lib/gcc", os.path.abspath(os.curdir) + "/sysroot_usr_lib/gcc")
-        append_init_file("usr/lib/riscv64-poky-linux/6.1.1", os.path.abspath(os.curdir) + "/sysroot_usr_lib_riscv64-poky-linux_6.1.1")
-        append_init_file("lib", os.path.abspath(os.curdir) + "/sysroot_lib")
+        append_dir("usr/include", os.path.abspath(os.curdir) + "/sysroot_usr_include")
+        append_dir("usr/lib/gcc", os.path.abspath(os.curdir) + "/sysroot_usr_lib/gcc")
+        append_dir("usr/lib/riscv64-poky-linux/6.1.1", os.path.abspath(os.curdir) + "/sysroot_usr_lib_riscv64-poky-linux_6.1.1")
+        append_dir("lib", os.path.abspath(os.curdir) + "/sysroot_lib")
 
     # adds ~40mb 
     if ENABLE_PYTHON:
-        append_init_file("usr/lib/python2.7", os.path.abspath(os.curdir) + "/sysroot_usr_lib/python2.7")
-        append_init_file("lib", RISCV + "/riscv64-unknown-linux-gnu/lib")
+        append_dir("usr/lib/python2.7", os.path.abspath(os.curdir) + "/sysroot_usr_lib/python2.7")
+        append_dir("lib", RISCV + "/riscv64-unknown-linux-gnu/lib")
 
 # Input: list of full path names to all of the files/directories we want to include.
 def initialize_init_file():
@@ -195,19 +196,18 @@ def initialize_init_file():
         # f.write("slink /usr/lib/libstdc++.so.6 libstdc++.so.6.0.22 755 0 0\n")
         # f.write("file /usr/lib/libstdc++.so.6.0.22 ../sysroot_usr_lib/libstdc++.so.6.0.22 755 0 0\n")
 
-
         f.write("\n")
         f.write("file /etc/inittab ../inittab 755 0 0\n")
         f.write("file /etc/profile ../profile 755 0 0\n")
         f.write("\n")
 
-def append_init_file(dest_dir, src_dir):
-         
+def append_dir(dest_dir, src_dir):
     assert (src_dir[-1] != '/') # don't include "/" at the end of your source directory
 
     cmd = "find " + src_dir
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     (output, err) = p.communicate()
+    print output
     paths = output.split('\n')[1:] # remove the first element, which is just src_dir.
     assert output.split('\n')[0] == src_dir
 
@@ -231,7 +231,10 @@ def append_init_file(dest_dir, src_dir):
                 name = p.split(src_dir+ "/")[1]
                 f.write("file /" + dest_dir + "/" + name + " " + p + " 755 0 0\n")
 
- 
+
+def append_file(dest_file, src_file, permissions="755 0 0"):
+    with open(OUTNAME, 'a') as f:
+        f.write("file /{0} {1} {2}\n".format(dest_file, src_file, permissions))
  
 #---------------------
 if __name__ == '__main__':

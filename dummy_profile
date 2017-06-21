@@ -1,6 +1,11 @@
-echo ""
-uname -a
-echo ""
-echo "This is a dummy profile! Give me something more interesting to do!"
-echo ""
+cd /usr/bin
+cd /celio
+ls
+echo ./hello.riscv
+/celio/rv_counters/rv_counters &
+sleep 1
+./hello.riscv
+killall rv_counters
+while pgrep rv_counters > /dev/null; do sleep 1; done
+sync
 poweroff -f

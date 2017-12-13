@@ -8,7 +8,8 @@ MAKE=`command -v gmake || command -v make`
 mkdir -p riscv-pk/build
 cd riscv-pk/build
 echo "Configuring riscv-pk"
-../configure --prefix=$RISCV --host=riscv64-unknown-elf --with-payload=$VMLINUX --disable-logo > build.log
+../configure --prefix=$RISCV --host=riscv64-unknown-elf --with-payload=$VMLINUX > build.log
+#../configure --prefix=$RISCV --host=riscv64-unknown-elf --with-payload=$VMLINUX --disable-logo > build.log
 echo "Building riscv-pk"
 $MAKE -j$JOBS >> build.log
 cd -

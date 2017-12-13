@@ -1,7 +1,7 @@
 
 # Some configuration.
 LINUX_VERSION=4.6.2
-RISCV-LINUX-BRANCH=master
+RISCV-LINUX-BRANCH=broom
 RISCV-LINUX-SHA=df91b31830ef24f748ef1b38c31ad4f913861b0b
 
 linux=linux-$(LINUX_VERSION)
@@ -32,8 +32,8 @@ $(linux):
 	curl -L https://cdn.kernel.org/pub/linux/kernel/v4.x/$(linux).tar.xz | tar -xJ
 	cd $(linux); \
 	git init; \
-	git remote add -t $(RISCV-LINUX-BRANCH) origin https://github.com/riscv/riscv-linux.git; \
-	git fetch --all; git checkout -f $(RISCV-LINUX-SHA)
+	git remote add origin https://github.com/firesim/riscv-linux.git; \
+	git fetch; git checkout -f $(RISCV-LINUX-SHA)
 
 $(linux)/.config: linux_config $(linux)
 	cp -f $< $@

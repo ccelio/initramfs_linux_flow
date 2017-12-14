@@ -39,13 +39,15 @@ def main():
     print "Using %s." % DIRNAME
     print "For   %s." % options.bmark
 
-    enables = (False,False,False)
+    enables = (ENABLE_GCC,ENABLE_BASH,ENABLE_PYTHON)
     if options.bmark == "all":
         enables = (True,True,True)
     elif options.bmark =="riscv-pk":
         enables = (True,True,False)
     elif options.bmark =="python":
         enables = (False,False,True)
+    elif options.bmark == "none":
+        enables = (ENABLE_GCC,ENABLE_BASH,ENABLE_PYTHON)
     ENABLE_GCC,ENABLE_BASH,ENABLE_PYTHON = enables
 
     initialize_init_file()
@@ -59,8 +61,9 @@ def main():
         append_init_file("usr/bin", os.path.abspath(os.curdir) + "/sysroot_usr_bin")
     if ENABLE_GCC:
         append_init_file("usr/include", os.path.abspath(os.curdir) + "/sysroot_usr_include")
-        append_init_file("usr/lib/gcc", os.path.abspath(os.curdir) + "/sysroot_usr_lib/gcc")
-        append_init_file("usr/lib/riscv64-poky-linux/6.1.1", os.path.abspath(os.curdir) + "/sysroot_usr_lib_riscv64-poky-linux_6.1.1")
+        append_init_file("usr/lib", os.path.abspath(os.curdir) + "/sysroot_usr_lib")
+#        append_init_file("usr/lib/gcc", os.path.abspath(os.curdir) + "/sysroot_usr_lib/gcc")
+#        append_init_file("usr/lib/riscv64-poky-linux/6.1.1", os.path.abspath(os.curdir) + "/sysroot_usr_lib_riscv64-poky-linux_6.1.1")
         append_init_file("lib", os.path.abspath(os.curdir) + "/sysroot_lib")
 
     # adds ~40mb

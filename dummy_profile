@@ -4,3 +4,33 @@ echo ""
 echo "This is a dummy profile! Give me something more interesting to do!"
 echo ""
 poweroff -f
+
+# Use this to setup a native gcc toolchain.
+export PATH=$PATH:/usr/libexec/gcc/riscv64-poky-linux/6.1.1
+export PYTHONHOME=/usr
+export PYTHONPATH=/usr/lib/python2.7
+cd /usr/bin
+ln -s riscv64-poky-linux-addr2line addr2line
+ln -s riscv64-poky-linux-ar ar
+ln -s riscv64-poky-linux-as as
+ln -s riscv64-poky-linux-c++filt c++filt
+ln -s riscv64-poky-linux-elfedit elfedit
+ln -s riscv64-poky-linux-gcc gcc
+ln -s riscv64-poky-linux-gprof gprof
+ln -s riscv64-poky-linux-ld ld
+ln -s riscv64-poky-linux-ld.bfd ld.bfd
+ln -s riscv64-poky-linux-nm nm
+ln -s riscv64-poky-linux-objcopy objcopy
+ln -s riscv64-poky-linux-objdump objdump
+ln -s riscv64-poky-linux-ranlib ranlib
+ln -s riscv64-poky-linux-readelf readlef
+ln -s riscv64-poky-linux-size size
+ln -s riscv64-poky-linux-strings strings
+ln -s riscv64-poky-linux-strip strip
+
+ln -s python2.7 python2
+ln -s python2 python
+ln -s python2.7-config python2-config
+ln -s python2-config python-config
+cd ~
+

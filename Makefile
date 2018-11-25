@@ -1,7 +1,7 @@
 
 # Some configuration.
 LINUX_VERSION=4.6.2
-RISCV-LINUX-BRANCH=master
+RISCV-LINUX-BRANCH=uart
 RISCV-LINUX-SHA=df91b31830ef24f748ef1b38c31ad4f913861b0b
 
 linux=linux-$(LINUX_VERSION)
@@ -32,7 +32,7 @@ $(linux):
 	curl -L https://cdn.kernel.org/pub/linux/kernel/v4.x/$(linux).tar.xz | tar -xJ
 	cd $(linux); \
 	git init; \
-	git remote add -t $(RISCV-LINUX-BRANCH) origin https://github.com/riscv/riscv-linux.git; \
+	git remote add -t $(RISCV-LINUX-BRANCH) origin https://github.com/donggyukim/riscv-linux.git; \
 	git fetch --all; git checkout -f $(RISCV-LINUX-SHA)
 
 $(linux)/.config: linux_config $(linux)
@@ -49,9 +49,8 @@ profile:
 	@echo "Give me a real profile script! Using a dummy instead."
 	cp dummy_profile profile
 
-DIRNAME ?= hello
 initramfs.txt: build-initram.py
-	./build-initram.py --dir=/nscratch/midas/initram/$(DIRNAME)
+	./build-initram.py --dirs $(DIRNAMES)
 
 busybox/busybox: busybox/.config.old profile
 	@echo "Building busybox."
